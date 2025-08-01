@@ -27,6 +27,7 @@ extern crate alloc;
 
 /// Import items from the SDK. The prelude contains common traits and macros.
 use stylus_sdk::{alloy_primitives::U256, prelude::*};
+use stylus_cache_sdk::{is_contract_cacheable};
 
 // Define some persistent storage using the Solidity ABI.
 // `Counter` will be the entrypoint.
@@ -45,8 +46,12 @@ impl Counter {
         self.number.get()
     }
 
+    pub fn is_cacheable(&self) -> bool {
+        is_contract_cacheable()
+    }
+
     /// Sets a number in storage to a user-specified value.
-    pub fn set_number(&mut self, new_number: U256) {
+    pub fn set_number_meet(&mut self, new_number: U256) {
         self.number.set(new_number);
     }
 
@@ -63,6 +68,6 @@ impl Counter {
     /// Increments `number` and updates its value in storage.
     pub fn increment(&mut self) {
         let number = self.number.get();
-        self.set_number(number + U256::from(1));
+        self.set_number_meet(number + U256::from(1));
     }
 }
